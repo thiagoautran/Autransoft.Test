@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Net.Http;
 
-namespace Autransoft.Test.Api.Lib.Server
+namespace Autransoft.Test.Lib.Server
 {
     public class AutransoftServer<Startup> : WebApplicationFactory<Startup>
         where Startup : class

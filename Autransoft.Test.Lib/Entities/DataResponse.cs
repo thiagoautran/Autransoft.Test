@@ -1,6 +1,6 @@
 using System.Net.Http;
 
-namespace Autransoft.Test.Api.Lib.Entities
+namespace Autransoft.Test.Lib.Entities
 {
     public class DataResponse<Entity>
     {

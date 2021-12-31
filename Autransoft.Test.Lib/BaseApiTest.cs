@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis.Extensions.Core.Abstractions;
 
-namespace Autransoft.Test.Api.Lib
+namespace Autransoft.Test.Lib
 {
     public class BaseProgramTest<ITestClass, Startup> : IDisposable
         where ITestClass : class

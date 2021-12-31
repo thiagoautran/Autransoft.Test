@@ -1,11 +1,11 @@
-using Autransoft.Test.Api.Lib.Entities;
+using Autransoft.Test.Lib.Entities;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Autransoft.Test.Api.Lib.Helper
+namespace Autransoft.Test.Lib.Helper
 {
     public class HttpClientHelper
     {

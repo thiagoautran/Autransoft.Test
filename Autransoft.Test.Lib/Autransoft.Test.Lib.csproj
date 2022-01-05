@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <PackageId>Autransoft.Test.Api</PackageId>
+    <PackageId>Autransoft.Test</PackageId>
     <Authors>Thiago</Authors>
     <Company />
     <Description />

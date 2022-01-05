@@ -4,7 +4,7 @@ using Autransoft.SendAsync.Mock.Lib.Base;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis.Extensions.Core.Abstractions;
 
-namespace Autransoft.Test.Lib
+namespace Autransoft.Test.Lib.Program
 {
     public class BaseProgramTest<ITestClass> : IDisposable
         where ITestClass : class

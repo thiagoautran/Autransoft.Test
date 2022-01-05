@@ -14,6 +14,8 @@ namespace Autransoft.Test.Lib
     {
         public WebApplicationFactory<Startup> WebApplicationFactory { get; set; }
 
+        public SendAsyncMethodMock SendAsyncMethodMock { get; set; }
+
         public IServiceCollection ServiceCollection { get; set; }
 
         public IServiceProvider ServiceProvider { get; set; }
@@ -47,11 +49,12 @@ namespace Autransoft.Test.Lib
         {
             RedisInMemory.AddToDependencyInjection(ServiceCollection);
             RedisDatabase = RedisInMemory.Get(ServiceProvider);
+            SendAsyncMethodMock = new SendAsyncMethodMock();
         }
 
         public void Dispose()
         {
-            SendAsyncMethodMock.Clean();
+            SendAsyncMethodMock.Dispose();
             RedisInMemory.Clean();
             HttpClient = null;
         }

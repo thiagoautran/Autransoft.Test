@@ -2,13 +2,11 @@ using System;
 using System.Net.Http;
 using Autransoft.Redis.InMemory.Lib.InMemory;
 using Autransoft.SendAsync.Mock.Lib.Base;
-using Autransoft.Test.Lib.Server;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis.Extensions.Core.Abstractions;
-using Xunit;
 
 namespace Autransoft.Test.Lib.Program
 {
@@ -49,8 +47,13 @@ namespace Autransoft.Test.Lib.Program
                 Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTest");
             });
 
-            Host = hostBuilder.Start();
+            var task = hostBuilder.StartAsync();
+            task.Wait();
+            Host = task.Result;
             
+            if(Host == null)
+                throw new Exception("Host is null.");
+
             _httpClient = Host.GetTestClient();
 
             RedisInMemory.AddToDependencyInjection(ServiceCollection);

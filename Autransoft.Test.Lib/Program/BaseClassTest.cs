@@ -1,19 +1,14 @@
 using System;
-using System.Net.Http;
 using Autransoft.Redis.InMemory.Lib.InMemory;
 using Autransoft.SendAsync.Mock.Lib.Base;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis.Extensions.Core.Abstractions;
 
 namespace Autransoft.Test.Lib.Program
 {
-    public class BaseProgramTest<ITestClass, Startup> : IDisposable
+    public class BaseClassTest<ITestClass> : IDisposable
         where ITestClass : class
-        where Startup : class
     {
-        public WebApplicationFactory<Startup> WebApplicationFactory { get; set; }
-
         public SendAsyncMethodMock SendAsyncMethodMock { get; set; }
 
         public IServiceCollection ServiceCollection { get; set; }
@@ -21,8 +16,6 @@ namespace Autransoft.Test.Lib.Program
         public IServiceProvider ServiceProvider { get; set; }
 
         public IRedisDatabase RedisDatabase { get; set; }
-
-        public HttpClient HttpClient { get; set; }
 
         public ITestClass TestClass 
         { 
@@ -39,12 +32,6 @@ namespace Autransoft.Test.Lib.Program
             }
         }
 
-        public BaseProgramTest(WebApplicationFactory<Startup> webApplicationFactory)
-        {
-            HttpClient = webApplicationFactory.CreateClient();
-            WebApplicationFactory = webApplicationFactory;
-        }
-
         public void Initialize()
         {
             RedisInMemory.AddToDependencyInjection(ServiceCollection);
@@ -56,7 +43,6 @@ namespace Autransoft.Test.Lib.Program
         {
             SendAsyncMethodMock.Dispose();
             RedisInMemory.Clean();
-            HttpClient = null;
         }
     }
 }

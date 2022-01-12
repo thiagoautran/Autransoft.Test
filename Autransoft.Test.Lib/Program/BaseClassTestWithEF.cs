@@ -2,14 +2,17 @@ using System;
 using Autransoft.Redis.InMemory.Lib.InMemory;
 using Autransoft.Redis.InMemory.Lib.Repositories;
 using Autransoft.SendAsync.Mock.Lib.Base;
+using Autransoft.Test.Lib.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis.Extensions.Core.Abstractions;
 
 namespace Autransoft.Test.Lib.Program
 {
-    public class BaseClassTest<ITestClass> : IDisposable
+    public class BaseClassTest<ITestClass, EntityFrameworkDbContext> : IDisposable
         where ITestClass : class
+        where EntityFrameworkDbContext : DbContext
     {
         public SendAsyncMethodMock SendAsyncMethodMock { get; set; }
 
@@ -26,8 +29,11 @@ namespace Autransoft.Test.Lib.Program
             get
             {
                 RedisInMemory.AddToDependencyInjection(ServiceCollection);
-                
+
                 SendAsyncMethodMock.AddToDependencyInjection(ServiceCollection);
+
+                ServiceCollection.Remove<DbContext>();
+                ServiceCollection.AddDbContext<DbContext>(options => options.UseSqlite("Data Source=Test.db"));
 
                 ServiceProvider = ServiceCollection.BuildServiceProvider();
 
@@ -68,8 +74,11 @@ namespace Autransoft.Test.Lib.Program
             RedisDatabase = new RedisDatabaseRepository();
         }
 
-        public void Initialize()
+        public void Initialize(string environment)
         {
+            ServiceCollection.AddDbContext<DbContext>(options => options.UseSqlite("Data Source=Test.db"));
+
+            ServiceProvider = ServiceCollection.BuildServiceProvider();
         }
 
         public void Dispose()

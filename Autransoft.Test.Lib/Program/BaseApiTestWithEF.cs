@@ -3,6 +3,8 @@ using System.Net.Http;
 using Autransoft.Redis.InMemory.Lib.InMemory;
 using Autransoft.Redis.InMemory.Lib.Repositories;
 using Autransoft.SendAsync.Mock.Lib.Base;
+using Autransoft.Test.Lib.Data;
+using Autransoft.Test.Lib.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +19,8 @@ namespace Autransoft.Test.Lib.Program
         where Startup : class
         where EntityFrameworkDbContext : DbContext
     {
+        public IRepository<EntityFrameworkDbContext> Repository { get; set; }
+
         public SendAsyncMethodMock SendAsyncMethodMock { get; set; }
 
         public IServiceCollection ServiceCollection { get; set; }
@@ -79,9 +83,13 @@ namespace Autransoft.Test.Lib.Program
 
         public void Initialize()
         {
-            ServiceCollection.AddDbContext<DbContext>(options => options.UseSqlite("Data Source=Test.db"));
+            ServiceCollection.AddDbContext<SqlLiteContext<EntityFrameworkDbContext>>(options => options.UseSqlite("Data Source=Test.db"));
+
+            ServiceCollection.AddScoped(typeof(IRepository<EntityFrameworkDbContext>), typeof(Repository<EntityFrameworkDbContext>));
 
             ServiceProvider = ServiceCollection.BuildServiceProvider();
+
+            Repository = ServiceProvider.GetService<IRepository<EntityFrameworkDbContext>>();
         }
 
         private IHost CreateHost()

@@ -2,7 +2,9 @@ using System;
 using Autransoft.Redis.InMemory.Lib.InMemory;
 using Autransoft.Redis.InMemory.Lib.Repositories;
 using Autransoft.SendAsync.Mock.Lib.Base;
+using Autransoft.Test.Lib.Data;
 using Autransoft.Test.Lib.Extensions;
+using Autransoft.Test.Lib.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,8 @@ namespace Autransoft.Test.Lib.Program
         where ITestClass : class
         where EntityFrameworkDbContext : DbContext
     {
+        public IRepository<EntityFrameworkDbContext> Repository { get; set; }
+
         public SendAsyncMethodMock SendAsyncMethodMock { get; set; }
 
         public IServiceCollection ServiceCollection { get; set; }
@@ -78,7 +82,11 @@ namespace Autransoft.Test.Lib.Program
         {
             ServiceCollection.AddDbContext<DbContext>(options => options.UseSqlite("Data Source=Test.db"));
 
+            ServiceCollection.AddScoped(typeof(IRepository<EntityFrameworkDbContext>), typeof(Repository<EntityFrameworkDbContext>));
+
             ServiceProvider = ServiceCollection.BuildServiceProvider();
+
+            Repository = ServiceProvider.GetService<IRepository<EntityFrameworkDbContext>>();
         }
 
         public void Dispose()

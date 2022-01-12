@@ -8,7 +8,7 @@
     <Description />
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>3.1.16</Version>
+    <Version>3.1.17</Version>
   </PropertyGroup>
 
   <ItemGroup>

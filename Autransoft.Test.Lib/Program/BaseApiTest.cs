@@ -26,6 +26,8 @@ namespace Autransoft.Test.Lib.Program
 
         private HttpClient _httpClient;
 
+        private string _environment;
+
         public HttpClient HttpClient 
         { 
             get
@@ -44,8 +46,10 @@ namespace Autransoft.Test.Lib.Program
             }
         }
 
-        public void Initialize()
+        public void Initialize(string environment)
         {
+            _environment = environment;
+
             SendAsyncMethodMock = new SendAsyncMethodMock();
 
             RedisDatabase = new RedisDatabaseRepository();
@@ -56,8 +60,8 @@ namespace Autransoft.Test.Lib.Program
             var hostBuilder = new HostBuilder()
                 .ConfigureWebHost(webHostBuilder =>
                 {
-                    Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "IntegrationTest");
-                    Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTest");
+                    Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", _environment);
+                    Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", _environment);
                     webHostBuilder.UseEnvironment("IntegrationTest");
 
                     webHostBuilder.UseTestServer();

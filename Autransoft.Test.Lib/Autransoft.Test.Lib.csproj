@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autransoft.Fluent.HttpClient" Version="1.0.16" />
     <PackageReference Include="Autransoft.Redis.InMemory" Version="1.0.5" />
     <PackageReference Include="Autransoft.SendAsync.Mock" Version="1.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />

@@ -31,34 +31,44 @@ namespace Autransoft.Test.Lib.Program
             {
                 SendAsyncMethodMock.AddToDependencyInjection(ServiceCollection);
 
+                ServiceProvider = ServiceCollection.BuildServiceProvider();
+                
                 return _httpClient;
             }
         }
 
         public void Initialize()
         {
-            var hostBuilder = new HostBuilder().ConfigureWebHost(webHost =>
-            {
-                webHost.UseTestServer();
-                webHost.UseStartup<Startup>();
-                webHost.UseEnvironment("IntegrationTest");
-
-                Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "IntegrationTest");
-                Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTest");
-            });
-
-            var task = hostBuilder.StartAsync();
-            task.Wait();
-            Host = task.Result;
-            
-            if(Host == null)
-                throw new Exception("Host is null.");
+            Host = CreateHost();
 
             _httpClient = Host.GetTestClient();
 
-            RedisInMemory.AddToDependencyInjection(ServiceCollection);
-            RedisDatabase = RedisInMemory.Get(ServiceProvider);
             SendAsyncMethodMock = new SendAsyncMethodMock();
+
+            //RedisInMemory.AddToDependencyInjection(ServiceCollection);
+
+            ServiceProvider = ServiceCollection.BuildServiceProvider();
+
+            //RedisDatabase = RedisInMemory.Get(ServiceProvider);
+        }
+
+        private IHost CreateHost()
+        {
+            var hostBuilder = new HostBuilder()
+                .ConfigureWebHost(webHostBuilder =>
+                {
+                    webHostBuilder.UseTestServer();
+                    webHostBuilder.UseStartup<Startup>();
+                    webHostBuilder.UseEnvironment("IntegrationTest");
+                })
+                .ConfigureServices((hostBuilderContext, serviceCollection) =>
+                {
+                    ServiceCollection = serviceCollection;
+                });
+
+            var task = hostBuilder.StartAsync();
+            task.Wait();
+            return task.Result;
         }
 
         public void Dispose()

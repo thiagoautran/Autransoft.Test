@@ -1,8 +1,6 @@
 using System;
-using Autransoft.Redis.InMemory.Lib.InMemory;
 using Autransoft.SendAsync.Mock.Lib.Base;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis.Extensions.Core.Abstractions;
 
 namespace Autransoft.Test.Lib.Program
 {
@@ -15,7 +13,7 @@ namespace Autransoft.Test.Lib.Program
 
         public IServiceProvider ServiceProvider { get; set; }
 
-        public IRedisDatabase RedisDatabase { get; set; }
+        //public IRedisDatabase RedisDatabase { get; set; }
 
         public ITestClass TestClass 
         { 
@@ -34,15 +32,15 @@ namespace Autransoft.Test.Lib.Program
 
         public void Initialize()
         {
-            RedisInMemory.AddToDependencyInjection(ServiceCollection);
-            RedisDatabase = RedisInMemory.Get(ServiceProvider);
+            //RedisInMemory.AddToDependencyInjection(ServiceCollection);
+            //RedisDatabase = RedisInMemory.Get(ServiceProvider);
             SendAsyncMethodMock = new SendAsyncMethodMock();
         }
 
         public void Dispose()
         {
             SendAsyncMethodMock.Dispose();
-            RedisInMemory.Clean();
+            //RedisInMemory.Clean();
         }
     }
 }

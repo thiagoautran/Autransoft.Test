@@ -59,6 +59,9 @@ namespace Autransoft.Test.Lib.Program
                     webHostBuilder.UseTestServer();
                     webHostBuilder.UseStartup<Startup>();
                     webHostBuilder.UseEnvironment("IntegrationTest");
+                    
+                    Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "IntegrationTest");
+                    Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTest");
                 })
                 .ConfigureServices((hostBuilderContext, serviceCollection) =>
                 {

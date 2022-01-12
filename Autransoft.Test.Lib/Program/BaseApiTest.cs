@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using Autransoft.Redis.InMemory.Lib.InMemory;
+using Autransoft.Redis.InMemory.Lib.Repositories;
 using Autransoft.SendAsync.Mock.Lib.Base;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -29,27 +30,25 @@ namespace Autransoft.Test.Lib.Program
         { 
             get
             {
-                SendAsyncMethodMock.AddToDependencyInjection(ServiceCollection);
+                if (Host == null)
+                    Host = CreateHost();
 
-                ServiceProvider = ServiceCollection.BuildServiceProvider();
-                
+                if (_httpClient == null)
+                    _httpClient = Host.GetTestClient();
+
+                var redisDatabase = RedisInMemory.Get(Host.Services);
+                if(redisDatabase != null)
+                    ((RedisDatabaseRepository)redisDatabase).SetDatabase(((RedisDatabaseRepository)RedisDatabase).GetDatabase());
+
                 return _httpClient;
             }
         }
 
         public void Initialize()
         {
-            Host = CreateHost();
-
-            _httpClient = Host.GetTestClient();
-
             SendAsyncMethodMock = new SendAsyncMethodMock();
 
-            //RedisInMemory.AddToDependencyInjection(ServiceCollection);
-
-            ServiceProvider = ServiceCollection.BuildServiceProvider();
-
-            //RedisDatabase = RedisInMemory.Get(ServiceProvider);
+            RedisDatabase = new RedisDatabaseRepository();
         }
 
         private IHost CreateHost()
@@ -63,11 +62,16 @@ namespace Autransoft.Test.Lib.Program
                 })
                 .ConfigureServices((hostBuilderContext, serviceCollection) =>
                 {
+                    RedisInMemory.AddToDependencyInjection(serviceCollection);
+                    SendAsyncMethodMock.AddToDependencyInjection(serviceCollection);
                     ServiceCollection = serviceCollection;
                 });
 
             var task = hostBuilder.StartAsync();
             task.Wait();
+
+            ServiceProvider = task.Result.Services;
+
             return task.Result;
         }
 
@@ -76,7 +80,9 @@ namespace Autransoft.Test.Lib.Program
             SendAsyncMethodMock.Dispose();
             RedisInMemory.Clean();
 
-            Host.WaitForShutdown();
+            var task = Host.StopAsync();
+            task.Wait();
+
             Host.Dispose();
 
             if(_httpClient != null)

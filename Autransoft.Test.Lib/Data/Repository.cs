@@ -1,5 +1,4 @@
 using Autransoft.Test.Lib.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Autransoft.Test.Lib.Data
 {
@@ -9,7 +8,7 @@ namespace Autransoft.Test.Lib.Data
 
         public Repository(SqlLiteContext dbContext) 
         {
-            dbContext.Database.Migrate();
+            dbContext.Database.EnsureCreated();
             DbContext = dbContext;
         } 
     }

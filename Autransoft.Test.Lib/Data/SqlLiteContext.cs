@@ -7,12 +7,12 @@ namespace Autransoft.Test.Lib.Data
     {
         internal static Assembly Assembly { get; set; }
 
+        public SqlLiteContext() { }
+
         public SqlLiteContext(DbContextOptions<SqlLiteContext> options) : base(options) { }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder.UseSqlite("Data Source=Test.db");
-        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

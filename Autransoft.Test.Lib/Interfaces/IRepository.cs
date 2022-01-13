@@ -1,11 +1,9 @@
 using Autransoft.Test.Lib.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Autransoft.Test.Lib.Interfaces
 {
-    public interface IRepository<EntityFrameworkDbContext>
-        where EntityFrameworkDbContext : DbContext
+    public interface IRepository
     {
-        SqlLiteContext<EntityFrameworkDbContext> SqlLiteContext { get; set; }
+        SqlLiteContext DbContext { get; set; }
     }
 }

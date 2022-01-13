@@ -16,8 +16,6 @@ namespace Autransoft.Test.Lib.Program
         where ITestClass : class
         where EntityFrameworkDbContext : DbContext
     {
-        public IRepository<EntityFrameworkDbContext> Repository { get; set; }
-
         public SendAsyncMethodMock SendAsyncMethodMock { get; set; }
 
         public IServiceCollection ServiceCollection { get; set; }
@@ -27,6 +25,8 @@ namespace Autransoft.Test.Lib.Program
         public IRedisDatabase RedisDatabase { get; set; }
 
         public IConfiguration Configuration { get; set; }
+
+        public IRepository Repository { get; set; }
 
         public ITestClass TestClass 
         { 
@@ -55,6 +55,8 @@ namespace Autransoft.Test.Lib.Program
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTest");
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "IntegrationTest");
 
+            SqlLiteContext.Assembly = typeof(EntityFrameworkDbContext).Assembly;
+
             ServiceCollection = new ServiceCollection();
 
             Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.IntegrationTest.json", optional: false, reloadOnChange: false)).Build();
@@ -69,6 +71,8 @@ namespace Autransoft.Test.Lib.Program
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", environment);
 
+            SqlLiteContext.Assembly = typeof(EntityFrameworkDbContext).Assembly;
+
             ServiceCollection = new ServiceCollection();
 
             Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: false)).Build();
@@ -82,11 +86,11 @@ namespace Autransoft.Test.Lib.Program
         {
             ServiceCollection.AddDbContext<DbContext>(options => options.UseSqlite("Data Source=Test.db"));
 
-            ServiceCollection.AddScoped(typeof(IRepository<EntityFrameworkDbContext>), typeof(Repository<EntityFrameworkDbContext>));
+            ServiceCollection.AddScoped(typeof(IRepository), typeof(Repository));
 
             ServiceProvider = ServiceCollection.BuildServiceProvider();
 
-            Repository = ServiceProvider.GetService<IRepository<EntityFrameworkDbContext>>();
+            Repository = ServiceProvider.GetService<IRepository>();
         }
 
         public void Dispose()

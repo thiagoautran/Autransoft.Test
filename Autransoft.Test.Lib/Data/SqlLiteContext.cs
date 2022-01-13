@@ -1,16 +1,18 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
 namespace Autransoft.Test.Lib.Data
 {
-    public class SqlLiteContext<EntityFrameworkDbContext> : DbContext
-        where EntityFrameworkDbContext : DbContext
+    public class SqlLiteContext : DbContext
     {
-        public SqlLiteContext(DbContextOptions<SqlLiteContext<EntityFrameworkDbContext>> options) : base(options) { }
+        internal static Assembly Assembly { get; set; }
+
+        public SqlLiteContext(DbContextOptions<SqlLiteContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ApplyConfigurationsFromAssembly(typeof(EntityFrameworkDbContext).Assembly);
+            builder.ApplyConfigurationsFromAssembly(Assembly);
         }
     }
 }

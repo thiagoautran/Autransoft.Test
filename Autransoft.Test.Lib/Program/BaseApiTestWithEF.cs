@@ -19,8 +19,6 @@ namespace Autransoft.Test.Lib.Program
         where Startup : class
         where EntityFrameworkDbContext : DbContext
     {
-        public IRepository<EntityFrameworkDbContext> Repository { get; set; }
-
         public SendAsyncMethodMock SendAsyncMethodMock { get; set; }
 
         public IServiceCollection ServiceCollection { get; set; }
@@ -28,6 +26,8 @@ namespace Autransoft.Test.Lib.Program
         public IServiceProvider ServiceProvider { get; set; }
 
         public IRedisDatabase RedisDatabase { get; set; }
+
+        public IRepository Repository { get; set; }
 
         public IHost Host { get; private set; }
 
@@ -58,6 +58,8 @@ namespace Autransoft.Test.Lib.Program
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTest");
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "IntegrationTest");
             _environment = "IntegrationTest";
+
+            SqlLiteContext.Assembly = typeof(EntityFrameworkDbContext).Assembly;
             
             ServiceCollection = new ServiceCollection();
             var configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.IntegrationTest.json", optional: false, reloadOnChange: false)).Build();
@@ -73,6 +75,8 @@ namespace Autransoft.Test.Lib.Program
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", environment);
             _environment = environment;
 
+            SqlLiteContext.Assembly = typeof(EntityFrameworkDbContext).Assembly;
+
             ServiceCollection = new ServiceCollection();
             var configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: false)).Build();
 
@@ -83,13 +87,13 @@ namespace Autransoft.Test.Lib.Program
 
         public void Initialize()
         {
-            ServiceCollection.AddDbContext<SqlLiteContext<EntityFrameworkDbContext>>(options => options.UseSqlite("Data Source=Test.db"));
+            ServiceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite("Data Source=Test.db"));
 
-            ServiceCollection.AddScoped(typeof(IRepository<EntityFrameworkDbContext>), typeof(Repository<EntityFrameworkDbContext>));
+            ServiceCollection.AddScoped(typeof(IRepository), typeof(Repository));
 
             ServiceProvider = ServiceCollection.BuildServiceProvider();
 
-            Repository = ServiceProvider.GetService<IRepository<EntityFrameworkDbContext>>();
+            Repository = ServiceProvider.GetService<IRepository>();
         }
 
         private IHost CreateHost()

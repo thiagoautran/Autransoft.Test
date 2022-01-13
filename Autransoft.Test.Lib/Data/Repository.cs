@@ -1,12 +1,11 @@
-using Microsoft.EntityFrameworkCore;
+using Autransoft.Test.Lib.Interfaces;
 
 namespace Autransoft.Test.Lib.Data
 {
-    public class Repository<EntityFrameworkDbContext>
-        where EntityFrameworkDbContext : DbContext
+    public class Repository : IRepository
     {
-        public SqlLiteContext<EntityFrameworkDbContext> DbContext { get; set; }
+        public SqlLiteContext DbContext { get; set; }
 
-        public Repository(SqlLiteContext<EntityFrameworkDbContext> dbContext) => DbContext = dbContext;
+        public Repository(SqlLiteContext dbContext) => DbContext = dbContext;
     }
 }

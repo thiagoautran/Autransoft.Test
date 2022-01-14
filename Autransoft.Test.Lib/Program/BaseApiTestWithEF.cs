@@ -94,6 +94,8 @@ namespace Autransoft.Test.Lib.Program
             ServiceProvider = ServiceCollection.BuildServiceProvider();
 
             Repository = ServiceProvider.GetService<IRepository>();
+
+            AddToDependencyInjection(ServiceCollection);
         }
 
         private IHost CreateHost()
@@ -116,6 +118,8 @@ namespace Autransoft.Test.Lib.Program
 
                     serviceCollection.AddDbContext<DbContext>(options => options.UseSqlite("Data Source=Test.db"));
 
+                    AddToDependencyInjection(serviceCollection);
+
                     ServiceCollection = serviceCollection;
                 });
 
@@ -126,6 +130,8 @@ namespace Autransoft.Test.Lib.Program
 
             return task.Result;
         }
+
+        public virtual void AddToDependencyInjection(IServiceCollection serviceCollection) { }
 
         public void Dispose()
         {

@@ -10,8 +10,19 @@ namespace Autransoft.Test.Lib.Data
         public Repository(SqlLiteContext dbContext) 
         {
             dbContext.Database.EnsureCreated();
+
+            SqlLiteDispose();
+
+            dbContext.Database.EnsureCreated();
             dbContext.Database.Migrate();
+            
             DbContext = dbContext;
-        } 
+        }
+
+        private void SqlLiteDispose()
+        {
+            var task = DbContext.Database.EnsureDeletedAsync();
+            task.Wait();
+        }
     }
 }

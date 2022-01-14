@@ -94,8 +94,6 @@ namespace Autransoft.Test.Lib.Program
             ServiceProvider = ServiceCollection.BuildServiceProvider();
 
             Repository = ServiceProvider.GetService<IRepository>();
-
-            SqlLiteDispose();
         }
 
         private IHost CreateHost()

@@ -94,6 +94,8 @@ namespace Autransoft.Test.Lib.Program
             ServiceProvider = ServiceCollection.BuildServiceProvider();
 
             Repository = ServiceProvider.GetService<IRepository>();
+
+            SqlLiteDispose();
         }
 
         private IHost CreateHost()
@@ -130,13 +132,34 @@ namespace Autransoft.Test.Lib.Program
         public void Dispose()
         {
             SendAsyncMethodMock.Dispose();
+
             RedisInMemory.Clean();
 
+            HostDispose();
+
+            HttpClientDispose();
+
+            SqlLiteDispose();
+        }
+
+        private void HostDispose()
+        {
             var task = Host.StopAsync();
             task.Wait();
 
             Host.Dispose();
+        }
 
+        private void SqlLiteDispose()
+        {
+            var task = Repository.DbContext.Database.EnsureDeletedAsync();
+            task.Wait();
+
+            Repository.DbContext.DisposeAsync().GetAwaiter();
+        }
+
+        private void HttpClientDispose()
+        {
             if(_httpClient != null)
             {
                 _httpClient.Dispose();

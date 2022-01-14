@@ -7,6 +7,8 @@ namespace Autransoft.Test.Lib.Data
     {
         internal static Assembly Assembly { get; set; }
 
+        internal static string SQL_LITE_DB_NAME = "AutransoftSqlLite";
+
         public SqlLiteContext() : base() { }
 
         public SqlLiteContext(DbContextOptions<SqlLiteContext> options) : base(options) { }
@@ -14,7 +16,7 @@ namespace Autransoft.Test.Lib.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
         {
             if(!optionsBuilder.IsConfigured)
-                optionsBuilder.UseSqlite("Data Source=AutransoftSqlLite.db");
+                optionsBuilder.UseSqlite($"Data Source={SQL_LITE_DB_NAME}.db");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

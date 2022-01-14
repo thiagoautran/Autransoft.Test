@@ -87,7 +87,7 @@ namespace Autransoft.Test.Lib.Program
 
         public void Initialize()
         {
-            ServiceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite("Data Source=Test.db"));
+            ServiceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite($"Data Source={SqlLiteContext.SQL_LITE_DB_NAME}.db"));
 
             ServiceCollection.AddScoped(typeof(IRepository), typeof(RepositoryBefore));
 
@@ -114,7 +114,7 @@ namespace Autransoft.Test.Lib.Program
 
                     SendAsyncMethodMock.AddToDependencyInjection(serviceCollection);
 
-                    serviceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite("Data Source=Test.db"));
+                    serviceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite($"Data Source={SqlLiteContext.SQL_LITE_DB_NAME}.db"));
 
                     ServiceCollection.AddScoped(typeof(IRepository), typeof(RepositoryAfter));
 
@@ -141,11 +141,11 @@ namespace Autransoft.Test.Lib.Program
 
             RedisInMemory.Clean();
 
-            HostDispose();
-
             HttpClientDispose();
 
             SqlLiteDispose();
+
+            HostDispose();
         }
 
         private void HostDispose()
@@ -160,8 +160,6 @@ namespace Autransoft.Test.Lib.Program
         {
             var task = Repository.DbContext.Database.EnsureDeletedAsync();
             task.Wait();
-
-            Repository.DbContext.DisposeAsync().GetAwaiter();
         }
 
         private void HttpClientDispose()

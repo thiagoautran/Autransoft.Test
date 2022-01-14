@@ -91,11 +91,11 @@ namespace Autransoft.Test.Lib.Program
 
             ServiceCollection.AddScoped(typeof(IRepository), typeof(Repository));
 
+            AddToDependencyInjection(ServiceCollection);
+
             ServiceProvider = ServiceCollection.BuildServiceProvider();
 
             Repository = ServiceProvider.GetService<IRepository>();
-
-            AddToDependencyInjection(ServiceCollection);
         }
 
         private IHost CreateHost()

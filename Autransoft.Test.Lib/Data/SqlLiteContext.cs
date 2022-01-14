@@ -7,6 +7,8 @@ namespace Autransoft.Test.Lib.Data
     {
         internal static Assembly Assembly { get; set; }
 
+        public SqlLiteContext() : base() { }
+
         public SqlLiteContext(DbContextOptions<SqlLiteContext> options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 

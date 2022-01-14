@@ -21,6 +21,8 @@ namespace Autransoft.Test.Lib.Program
 
         public IConfiguration Configuration { get; set; }
 
+        private string _environment;
+
         public ITestClass TestClass 
         { 
             get
@@ -31,8 +33,11 @@ namespace Autransoft.Test.Lib.Program
 
                 ServiceProvider = ServiceCollection.BuildServiceProvider();
 
-                var testClass = ServiceProvider.GetService(typeof(ITestClass));
+                var redisDatabase = RedisInMemory.Get(ServiceProvider);
+                if(redisDatabase != null)
+                    ((RedisDatabaseRepository)redisDatabase).SetDatabase(((RedisDatabaseRepository)RedisDatabase).GetDatabase());
 
+                var testClass = ServiceProvider.GetService(typeof(ITestClass));
                 if(testClass != null)
                     return (ITestClass)testClass;
 
@@ -44,10 +49,11 @@ namespace Autransoft.Test.Lib.Program
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTest");
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "IntegrationTest");
+            _environment = "IntegrationTest";
 
             ServiceCollection = new ServiceCollection();
 
-            Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.IntegrationTest.json", optional: false, reloadOnChange: false)).Build();
+            Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{_environment}.json", optional: false, reloadOnChange: false)).Build();
 
             SendAsyncMethodMock = new SendAsyncMethodMock();
 
@@ -58,10 +64,11 @@ namespace Autransoft.Test.Lib.Program
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", environment);
+            _environment = environment;
 
             ServiceCollection = new ServiceCollection();
 
-            Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: false)).Build();
+            Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{_environment}.json", optional: false, reloadOnChange: false)).Build();
 
             SendAsyncMethodMock = new SendAsyncMethodMock();
 
@@ -70,11 +77,15 @@ namespace Autransoft.Test.Lib.Program
 
         public void Initialize()
         {
+            AddToDependencyInjection(ServiceCollection);
         }
+
+        public virtual void AddToDependencyInjection(IServiceCollection serviceCollection) { }
 
         public void Dispose()
         {
             SendAsyncMethodMock.Dispose();
+
             RedisInMemory.Clean();
         }
     }

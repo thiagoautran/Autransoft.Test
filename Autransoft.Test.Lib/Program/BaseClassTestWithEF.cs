@@ -28,6 +28,8 @@ namespace Autransoft.Test.Lib.Program
 
         public IRepository Repository { get; set; }
 
+        private string _environment;
+
         public ITestClass TestClass 
         { 
             get
@@ -36,13 +38,13 @@ namespace Autransoft.Test.Lib.Program
 
                 SendAsyncMethodMock.AddToDependencyInjection(ServiceCollection);
 
-                ServiceCollection.Remove<DbContext>();
-                ServiceCollection.AddDbContext<DbContext>(options => options.UseSqlite("Data Source=Test.db"));
-
                 ServiceProvider = ServiceCollection.BuildServiceProvider();
 
-                var testClass = ServiceProvider.GetService(typeof(ITestClass));
+                var redisDatabase = RedisInMemory.Get(ServiceProvider);
+                if(redisDatabase != null)
+                    ((RedisDatabaseRepository)redisDatabase).SetDatabase(((RedisDatabaseRepository)RedisDatabase).GetDatabase());
 
+                var testClass = ServiceProvider.GetService(typeof(ITestClass));
                 if(testClass != null)
                     return (ITestClass)testClass;
 
@@ -54,12 +56,12 @@ namespace Autransoft.Test.Lib.Program
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTest");
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "IntegrationTest");
+            _environment = "IntegrationTest";
 
             SqlLiteContext.Assembly = typeof(EntityFrameworkDbContext).Assembly;
 
             ServiceCollection = new ServiceCollection();
-
-            Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.IntegrationTest.json", optional: false, reloadOnChange: false)).Build();
+            Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{_environment}.json", optional: false, reloadOnChange: false)).Build();
 
             SendAsyncMethodMock = new SendAsyncMethodMock();
 
@@ -70,32 +72,37 @@ namespace Autransoft.Test.Lib.Program
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", environment);
+            _environment = environment;
 
             SqlLiteContext.Assembly = typeof(EntityFrameworkDbContext).Assembly;
 
             ServiceCollection = new ServiceCollection();
-
-            Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: false)).Build();
+            Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{_environment}.json", optional: false, reloadOnChange: false)).Build();
 
             SendAsyncMethodMock = new SendAsyncMethodMock();
 
             RedisDatabase = new RedisDatabaseRepository();
         }
 
-        public void Initialize(string environment)
+        public void Initialize()
         {
-            ServiceCollection.AddDbContext<DbContext>(options => options.UseSqlite("Data Source=Test.db"));
+            ServiceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite($"Data Source={SqlLiteContext.SQL_LITE_DB_NAME}.db"));
 
             ServiceCollection.AddScoped(typeof(IRepository), typeof(RepositoryBefore));
+
+            AddToDependencyInjection(ServiceCollection);
 
             ServiceProvider = ServiceCollection.BuildServiceProvider();
 
             Repository = ServiceProvider.GetService<IRepository>();
         }
 
+        public virtual void AddToDependencyInjection(IServiceCollection serviceCollection) { }
+        
         public void Dispose()
         {
             SendAsyncMethodMock.Dispose();
+
             RedisInMemory.Clean();
         }
     }

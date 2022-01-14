@@ -150,16 +150,22 @@ namespace Autransoft.Test.Lib.Program
 
         private void HostDispose()
         {
-            var task = Host.StopAsync();
-            task.Wait();
+            if(Host != null)
+            {
+                var task = Host.StopAsync();
+                task.Wait();
 
-            Host.Dispose();
+                Host.Dispose();
+            }
         }
 
         private void SqlLiteDispose()
         {
-            var task = Repository.DbContext.Database.EnsureDeletedAsync();
-            task.Wait();
+            if(Repository != null && Repository.DbContext != null && Repository.DbContext.Database != null)
+            {
+                var task = Repository.DbContext.Database.EnsureDeletedAsync();
+                task.Wait();
+            }
         }
 
         private void HttpClientDispose()

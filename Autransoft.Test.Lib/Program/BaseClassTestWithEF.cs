@@ -86,7 +86,7 @@ namespace Autransoft.Test.Lib.Program
         {
             ServiceCollection.AddDbContext<DbContext>(options => options.UseSqlite("Data Source=Test.db"));
 
-            ServiceCollection.AddScoped(typeof(IRepository), typeof(Repository));
+            ServiceCollection.AddScoped(typeof(IRepository), typeof(RepositoryBefore));
 
             ServiceProvider = ServiceCollection.BuildServiceProvider();
 

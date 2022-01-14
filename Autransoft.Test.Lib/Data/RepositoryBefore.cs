@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Autransoft.Test.Lib.Data
 {
-    public class Repository : IRepository
+    public class RepositoryBefore : IRepository
     {
         public SqlLiteContext DbContext { get; set; }
 
-        public Repository(SqlLiteContext dbContext) 
+        public RepositoryBefore(SqlLiteContext dbContext) 
         {
             dbContext.Database.EnsureCreated();
 

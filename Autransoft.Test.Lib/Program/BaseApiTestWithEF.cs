@@ -89,9 +89,7 @@ namespace Autransoft.Test.Lib.Program
         {
             ServiceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite("Data Source=Test.db"));
 
-            ServiceCollection.AddScoped(typeof(IRepository), typeof(Repository));
-
-            AddToDependencyInjection(ServiceCollection);
+            ServiceCollection.AddScoped(typeof(IRepository), typeof(RepositoryBefore));
 
             ServiceProvider = ServiceCollection.BuildServiceProvider();
 
@@ -116,7 +114,9 @@ namespace Autransoft.Test.Lib.Program
 
                     SendAsyncMethodMock.AddToDependencyInjection(serviceCollection);
 
-                    serviceCollection.AddDbContext<DbContext>(options => options.UseSqlite("Data Source=Test.db"));
+                    serviceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite("Data Source=Test.db"));
+
+                    ServiceCollection.AddScoped(typeof(IRepository), typeof(RepositoryAfter));
 
                     AddToDependencyInjection(serviceCollection);
 
@@ -128,6 +128,8 @@ namespace Autransoft.Test.Lib.Program
 
             ServiceProvider = task.Result.Services;
 
+            Repository = ServiceProvider.GetService<IRepository>();
+            
             return task.Result;
         }
 

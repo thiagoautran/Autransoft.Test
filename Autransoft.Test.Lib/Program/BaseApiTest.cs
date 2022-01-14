@@ -46,13 +46,30 @@ namespace Autransoft.Test.Lib.Program
             }
         }
 
-        public void Initialize(string environment)
+        public BaseApiTest()
         {
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTest");
+            Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "IntegrationTest");
+            _environment = "IntegrationTest";
+
+            SendAsyncMethodMock = new SendAsyncMethodMock();
+
+            RedisDatabase = new RedisDatabaseRepository();
+        }
+
+        public BaseApiTest(string environment)
+        {
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
+            Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", environment);
             _environment = environment;
 
             SendAsyncMethodMock = new SendAsyncMethodMock();
 
             RedisDatabase = new RedisDatabaseRepository();
+        }
+
+        public void Initialize()
+        {
         }
 
         private IHost CreateHost()
@@ -70,7 +87,11 @@ namespace Autransoft.Test.Lib.Program
                 .ConfigureServices((hostBuilderContext, serviceCollection) =>
                 {
                     RedisInMemory.AddToDependencyInjection(serviceCollection);
+                    
                     SendAsyncMethodMock.AddToDependencyInjection(serviceCollection);
+
+                    AddToDependencyInjection(serviceCollection);
+
                     ServiceCollection = serviceCollection;
                 });
 
@@ -82,20 +103,36 @@ namespace Autransoft.Test.Lib.Program
             return task.Result;
         }
 
+        public virtual void AddToDependencyInjection(IServiceCollection serviceCollection) { }
+
         public void Dispose()
         {
             SendAsyncMethodMock.Dispose();
+
             RedisInMemory.Clean();
 
-            var task = Host.StopAsync();
-            task.Wait();
+            HttpClientDispose();
 
-            Host.Dispose();
+            HostDispose();
+        }
 
+        private void HttpClientDispose()
+        {
             if(_httpClient != null)
             {
                 _httpClient.Dispose();
                 _httpClient = null;
+            }
+        }
+
+        private void HostDispose()
+        {
+            if(Host != null)
+            {
+                var task = Host.StopAsync();
+                task.Wait();
+
+                Host.Dispose();
             }
         }
     }

@@ -11,7 +11,7 @@ namespace Autransoft.Test.Lib.Data
         {
             dbContext.Database.EnsureCreated();
 
-            SqlLiteDispose();
+            SqlLiteDispose(dbContext);
 
             dbContext.Database.EnsureCreated();
             dbContext.Database.Migrate();
@@ -19,9 +19,9 @@ namespace Autransoft.Test.Lib.Data
             DbContext = dbContext;
         }
 
-        private void SqlLiteDispose()
+        private void SqlLiteDispose(SqlLiteContext dbContext)
         {
-            var task = DbContext.Database.EnsureDeletedAsync();
+            var task = dbContext.Database.EnsureDeletedAsync();
             task.Wait();
         }
     }

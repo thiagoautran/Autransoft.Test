@@ -6,19 +6,27 @@
     <Authors>Thiago</Authors>
     <Company />
     <Description />
+    <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>3.1.0</Version>
+    <Version>3.1.42</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autransoft.Redis.InMemory" Version="1.0.1" />
-    <PackageReference Include="Autransoft.SendAsync.Mock" Version="1.0.6" />
+    <PackageReference Include="Autransoft.Fluent.HttpClient" Version="1.0.19" />
+    <PackageReference Include="Autransoft.Redis.InMemory" Version="1.0.5" />
+    <PackageReference Include="Autransoft.SendAsync.Mock" Version="1.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.22" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.13">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 
 </Project>
-

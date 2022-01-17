@@ -2,7 +2,7 @@ using System;
 using System.Net.Http;
 using Autransoft.Redis.InMemory.Lib.InMemory;
 using Autransoft.Redis.InMemory.Lib.Repositories;
-using Autransoft.SendAsync.Mock.Lib.Base;
+using Autransoft.SendAsync.Mock.Lib.Servers;
 using Autransoft.Test.Lib.Data;
 using Autransoft.Test.Lib.Interfaces;
 using Microsoft.AspNetCore.Hosting;

@@ -13,8 +13,8 @@
 
   <ItemGroup>
     <PackageReference Include="Autransoft.Fluent.HttpClient" Version="1.0.19" />
-    <PackageReference Include="Autransoft.Redis.InMemory" Version="1.0.5" />
-    <PackageReference Include="Autransoft.SendAsync.Mock" Version="1.0.7" />
+    <PackageReference Include="Autransoft.Redis.InMemory" Version="1.0.6" />
+    <PackageReference Include="Autransoft.SendAsync.Mock" Version="1.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.13" />

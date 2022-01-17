@@ -1,7 +1,7 @@
 using System;
 using Autransoft.Redis.InMemory.Lib.InMemory;
 using Autransoft.Redis.InMemory.Lib.Repositories;
-using Autransoft.SendAsync.Mock.Lib.Base;
+using Autransoft.SendAsync.Mock.Lib.Servers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis.Extensions.Core.Abstractions;

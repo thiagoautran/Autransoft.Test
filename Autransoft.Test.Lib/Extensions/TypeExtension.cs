@@ -1,10 +1,28 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Autransoft.Test.Lib.Extensions
 {
     public static class ParamsExtension
     {
+        public static object[] GetParams<CLASS>(this CLASS clas, IServiceCollection serviceCollection)
+            where CLASS : class
+        {
+            var types = new List<object>();
+
+            var listConstructor = typeof(CLASS).GetConstructors();
+            foreach(var contructor in listConstructor.Where(contructor => contructor.IsPublic))
+            {
+                var listParam = contructor.GetParameters();
+                types.AddRange(listParam.Select(param => param.ParameterType.Default(serviceCollection)));
+                break;
+            }
+
+            return types.ToArray();
+        }
+
         public static object Default(this Type type, IServiceCollection serviceCollection)
         {
             if (type == typeof(short))

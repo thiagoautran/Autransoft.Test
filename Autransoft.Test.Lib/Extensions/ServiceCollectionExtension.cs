@@ -62,7 +62,7 @@ namespace Autransoft.Test.Lib.Extensions
             if(descriptor != null)
                 serviceCollection.Remove(descriptor);
 
-            serviceCollection.AddTransient<INTERFACE, CLASS>(serviceCollection => clas);
+            serviceCollection.AddTransient<INTERFACE>(serviceCollection => clas);
         }
 
         public static void ReplaceScoped<INTERFACE, CLASS>(this IServiceCollection serviceCollection) 

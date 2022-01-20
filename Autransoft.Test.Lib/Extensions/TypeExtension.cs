@@ -7,7 +7,7 @@ namespace Autransoft.Test.Lib.Extensions
 {
     public static class ParamsExtension
     {
-        public static object[] GetParams<CLASS>(this CLASS clas, IServiceCollection serviceCollection)
+        public static object[] GetParams<CLASS>(IServiceCollection serviceCollection)
             where CLASS : class
         {
             var types = new List<object>();

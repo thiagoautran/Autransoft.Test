@@ -27,6 +27,19 @@ namespace Autransoft.Test.Lib.Extensions
             }
         }
 
+        public static void ReplaceSingleton<INTERFACE, CLASS>(this IServiceCollection serviceCollection, CLASS clas)
+            where CLASS : class, INTERFACE
+            where INTERFACE : class 
+        {
+            var descriptor = serviceCollection.FirstOrDefault(serviceDescriptor => serviceDescriptor.ServiceType == typeof(INTERFACE));
+
+            if(descriptor != null)
+            {
+                serviceCollection.Remove(descriptor);
+                serviceCollection.AddSingleton<INTERFACE>(serviceCollection => clas);
+            }
+        }
+
         public static void ReplaceTransient<INTERFACE, CLASS>(this IServiceCollection serviceCollection) 
             where CLASS : class, INTERFACE
             where INTERFACE : class 
@@ -40,6 +53,19 @@ namespace Autransoft.Test.Lib.Extensions
             }
         }
 
+        public static void ReplaceTransient<INTERFACE, CLASS>(this IServiceCollection serviceCollection, CLASS clas)
+            where CLASS : class, INTERFACE
+            where INTERFACE : class 
+        {
+            var descriptor = serviceCollection.FirstOrDefault(serviceDescriptor => serviceDescriptor.ServiceType == typeof(INTERFACE));
+
+            if(descriptor != null)
+            {
+                serviceCollection.Remove(descriptor);
+                serviceCollection.AddTransient<INTERFACE>(serviceCollection => clas);
+            }
+        }
+
         public static void ReplaceScoped<INTERFACE, CLASS>(this IServiceCollection serviceCollection) 
             where CLASS : class, INTERFACE
             where INTERFACE : class 
@@ -50,6 +76,19 @@ namespace Autransoft.Test.Lib.Extensions
             {
                 serviceCollection.Remove(descriptor);
                 serviceCollection.AddScoped<INTERFACE, CLASS>();
+            }
+        }
+
+        public static void ReplaceScoped<INTERFACE, CLASS>(this IServiceCollection serviceCollection, CLASS clas)
+            where CLASS : class, INTERFACE
+            where INTERFACE : class 
+        {
+            var descriptor = serviceCollection.FirstOrDefault(serviceDescriptor => serviceDescriptor.ServiceType == typeof(INTERFACE));
+
+            if(descriptor != null)
+            {
+                serviceCollection.Remove(descriptor);
+                serviceCollection.AddScoped<INTERFACE>(serviceCollection => clas);
             }
         }
     }

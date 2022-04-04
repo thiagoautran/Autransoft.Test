@@ -3,16 +3,21 @@ using System.Net.Http;
 using Autransoft.Redis.InMemory.Lib.InMemory;
 using Autransoft.Redis.InMemory.Lib.Repositories;
 using Autransoft.SendAsync.Mock.Lib.Servers;
+using Autransoft.Test.Lib.Data;
+using Autransoft.Test.Lib.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis.Extensions.Core.Abstractions;
 
 namespace Autransoft.Test.Lib.Program
 {
-    public class BaseApiTest<Startup> : IDisposable
+    public class BaseApiTest<Startup, EntityFrameworkDbContext> : IDisposable
         where Startup : class
+        where EntityFrameworkDbContext : DbContext
     {
         public SendAsyncMethodMock SendAsyncMethodMock { get; set; }
 
@@ -20,7 +25,11 @@ namespace Autransoft.Test.Lib.Program
 
         public IServiceProvider ServiceProvider { get; set; }
 
+        public IConfiguration Configuration { get; set; }
+
         public IRedisDatabase RedisDatabase { get; set; }
+
+        public IRepository Repository { get; set; }
 
         public IHost Host { get; private set; }
 
@@ -52,6 +61,11 @@ namespace Autransoft.Test.Lib.Program
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "IntegrationTest");
             _environment = "IntegrationTest";
 
+            SqlLiteContext.Assembly = typeof(EntityFrameworkDbContext).Assembly;
+            
+            ServiceCollection = new ServiceCollection();
+            var configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.IntegrationTest.json", optional: false, reloadOnChange: false)).Build();
+
             SendAsyncMethodMock = new SendAsyncMethodMock();
 
             RedisDatabase = new RedisDatabaseRepository();
@@ -63,6 +77,11 @@ namespace Autransoft.Test.Lib.Program
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", environment);
             _environment = environment;
 
+            SqlLiteContext.Assembly = typeof(EntityFrameworkDbContext).Assembly;
+
+            ServiceCollection = new ServiceCollection();
+            var configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: false)).Build();
+
             SendAsyncMethodMock = new SendAsyncMethodMock();
 
             RedisDatabase = new RedisDatabaseRepository();
@@ -70,6 +89,13 @@ namespace Autransoft.Test.Lib.Program
 
         public void Initialize()
         {
+            ServiceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite($"Data Source={SqlLiteContext.SQL_LITE_DB_NAME}.db"));
+
+            ServiceCollection.AddScoped(typeof(IRepository), typeof(RepositoryBefore));
+
+            ServiceProvider = ServiceCollection.BuildServiceProvider();
+
+            Repository = ServiceProvider.GetService<IRepository>();
         }
 
         private IHost CreateHost()
@@ -87,12 +113,17 @@ namespace Autransoft.Test.Lib.Program
                 .ConfigureServices((hostBuilderContext, serviceCollection) =>
                 {
                     RedisInMemory.AddToDependencyInjection(serviceCollection);
-                    
+
                     SendAsyncMethodMock.AddToDependencyInjection(serviceCollection);
 
-                    AddToDependencyInjection(serviceCollection);
+                    serviceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite($"Data Source={SqlLiteContext.SQL_LITE_DB_NAME}.db"));
+
+                    ServiceCollection.AddScoped(typeof(IRepository), typeof(RepositoryAfter));
+
+                    AddToDependencyInjection(serviceCollection, hostBuilderContext.Configuration);
 
                     ServiceCollection = serviceCollection;
+                    Configuration = hostBuilderContext.Configuration;
                 });
 
             var task = hostBuilder.StartAsync();
@@ -100,10 +131,12 @@ namespace Autransoft.Test.Lib.Program
 
             ServiceProvider = task.Result.Services;
 
+            Repository = ServiceProvider.GetService<IRepository>();
+            
             return task.Result;
         }
 
-        public virtual void AddToDependencyInjection(IServiceCollection serviceCollection) { }
+        public virtual void AddToDependencyInjection(IServiceCollection serviceCollection, IConfiguration configuration) { }
 
         public void Dispose()
         {
@@ -113,16 +146,9 @@ namespace Autransoft.Test.Lib.Program
 
             HttpClientDispose();
 
-            HostDispose();
-        }
+            SqlLiteDispose();
 
-        private void HttpClientDispose()
-        {
-            if(_httpClient != null)
-            {
-                _httpClient.Dispose();
-                _httpClient = null;
-            }
+            HostDispose();
         }
 
         private void HostDispose()
@@ -133,6 +159,24 @@ namespace Autransoft.Test.Lib.Program
                 task.Wait();
 
                 Host.Dispose();
+            }
+        }
+
+        private void SqlLiteDispose()
+        {
+            if(Repository != null && Repository.DbContext != null && Repository.DbContext.Database != null)
+            {
+                var task = Repository.DbContext.Database.EnsureDeletedAsync();
+                task.Wait();
+            }
+        }
+
+        private void HttpClientDispose()
+        {
+            if(_httpClient != null)
+            {
+                _httpClient.Dispose();
+                _httpClient = null;
             }
         }
     }

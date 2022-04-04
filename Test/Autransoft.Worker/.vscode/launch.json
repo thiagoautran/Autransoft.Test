@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug 6.0",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/TAN.Core.6.0.Skokka.Pulling.Worker/bin/Debug/net6.0/TAN.Core.6.0.Skokka.Pulling.Worker.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/TAN.Core.6.0.Skokka.Pulling.Worker",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "Run All Tests",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "test",
+            "program": "${workspaceFolder}/TAN.Core.6.0.Skokka.Pulling.IntegrationTest/bin/Debug/net6.0/TAN.Core.6.0.Skokka.Pulling.IntegrationTest.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/TAN.Core.6.0.Skokka.Pulling.IntegrationTest",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Test"
+            }
+        }
+    ]
+}

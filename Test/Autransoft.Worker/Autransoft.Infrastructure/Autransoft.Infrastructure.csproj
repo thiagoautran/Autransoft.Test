@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Autransoft.Fluent.HttpClient" Version="1.0.16" />
+    <PackageReference Include="Autransoft.Template.EntityFramework" Version="1.0.10" />
+    <PackageReference Include="Autransoft.Template.EntityFramework.PostgreSQL" Version="1.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Autransoft.ApplicationCore\Autransoft.ApplicationCore.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>Autransoft.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+</Project>

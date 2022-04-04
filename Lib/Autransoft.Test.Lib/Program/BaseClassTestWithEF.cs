@@ -90,14 +90,14 @@ namespace Autransoft.Test.Lib.Program
 
             ServiceCollection.AddScoped(typeof(IRepository), typeof(RepositoryBefore));
 
-            AddToDependencyInjection(ServiceCollection);
+            AddToDependencyInjection(ServiceCollection, Configuration);
 
             ServiceProvider = ServiceCollection.BuildServiceProvider();
 
             Repository = ServiceProvider.GetService<IRepository>();
         }
 
-        public virtual void AddToDependencyInjection(IServiceCollection serviceCollection) { }
+        public virtual void AddToDependencyInjection(IServiceCollection serviceCollection, IConfiguration configuration) { }
         
         public void Dispose()
         {

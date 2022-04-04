@@ -1,5 +1,5 @@
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 namespace Autransoft.Test.Lib.Extensions
 {

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>dotnet-Autransoft.Worker-4A3270D2-CEC6-4D86-AB97-070E39550B43</UserSecretsId>
+    <RootNamespace>Autransoft.Worker</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autransoft.BackgroundService.Order" Version="1.0.18" />
+    <PackageReference Include="Autransoft.Fluent.HttpClient" Version="1.0.16" />
+    <PackageReference Include="Autransoft.Template.EntityFramework" Version="1.0.10" />
+    <PackageReference Include="Autransoft.Template.EntityFramework.PostgreSQL" Version="1.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Autransoft.ApplicationCore\Autransoft.ApplicationCore.csproj" />
+    <ProjectReference Include="..\Autransoft.Infrastructure\Autransoft.Infrastructure.csproj" />
+  </ItemGroup>
+  
+</Project>

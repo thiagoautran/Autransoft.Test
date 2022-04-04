@@ -77,10 +77,10 @@ namespace Autransoft.Test.Lib.Program
 
         public void Initialize()
         {
-            AddToDependencyInjection(ServiceCollection);
+            AddToDependencyInjection(ServiceCollection, Configuration);
         }
 
-        public virtual void AddToDependencyInjection(IServiceCollection serviceCollection) { }
+        public virtual void AddToDependencyInjection(IServiceCollection serviceCollection, IConfiguration configuration) { }
 
         public void Dispose()
         {

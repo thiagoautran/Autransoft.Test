@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -27,6 +27,21 @@
     <ProjectReference Include="..\Autransoft.ApplicationCore\Autransoft.ApplicationCore.csproj" />
     <ProjectReference Include="..\Autransoft.Infrastructure\Autransoft.Infrastructure.csproj" />
     <ProjectReference Include="..\Autransoft.Worker\Autransoft.Worker.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Mocks\JsonResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>JsonResource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Mocks\JsonResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>JsonResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

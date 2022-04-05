@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autransoft.ApplicationCore"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autransoft.Infrastructure", "Autransoft.Infrastructure\Autransoft.Infrastructure.csproj", "{708AF4C0-FEB8-4AAB-83DF-93F9D82F57A1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autransoft.Test", "Autransoft.Test\Autransoft.Test.csproj", "{A9A397B3-8142-4A72-AFF7-1B7529FBE82B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autransoft.IntegrationTest", "Autransoft.IntegrationTest\Autransoft.IntegrationTest.csproj", "{D1940AB6-AA41-4C49-8FD1-AB3ABBAE1327}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{708AF4C0-FEB8-4AAB-83DF-93F9D82F57A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{708AF4C0-FEB8-4AAB-83DF-93F9D82F57A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{708AF4C0-FEB8-4AAB-83DF-93F9D82F57A1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A9A397B3-8142-4A72-AFF7-1B7529FBE82B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9A397B3-8142-4A72-AFF7-1B7529FBE82B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9A397B3-8142-4A72-AFF7-1B7529FBE82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9A397B3-8142-4A72-AFF7-1B7529FBE82B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1940AB6-AA41-4C49-8FD1-AB3ABBAE1327}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1940AB6-AA41-4C49-8FD1-AB3ABBAE1327}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1940AB6-AA41-4C49-8FD1-AB3ABBAE1327}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1940AB6-AA41-4C49-8FD1-AB3ABBAE1327}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -23,7 +23,7 @@ namespace Autransoft.Api.Controllers.v1
         public StatusInvestController(IAppLogger<StatusInvestController> logger, IStatusInvestFacade statusInvestFacade) =>
             (_logger, _statusInvestFacade) = (logger, statusInvestFacade);
 
-        [HttpGet("actions")]
+        [HttpGet("action")]
         [MapToApiVersion("1")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ActionEntity>))]
         [ProducesResponseType(StatusCodes.Status204NoContent, Type = null)]

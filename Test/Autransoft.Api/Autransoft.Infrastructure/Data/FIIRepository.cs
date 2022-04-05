@@ -3,7 +3,7 @@ using Autransoft.ApplicationCore.Interfaces;
 using Autransoft.Template.EntityFramework.Lib.Data;
 using Autransoft.Template.EntityFramework.Lib.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Autransoft.Infrastructure.Data
@@ -12,9 +12,8 @@ namespace Autransoft.Infrastructure.Data
     {
         public FIIRepository(IAutranSoftEfLogger<FIIRepository> logger, IAutranSoftEfContext dbContext) : base(logger, dbContext) { }
 
-        public async Task<FIIEntity> GetAsync(int companyId) =>
+        public async Task<IEnumerable<FIIEntity>> ListAsync() =>
             await _dbContext.Set<FIIEntity>()
-                .Where(action => action.CompanyId == companyId)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
     }
 }

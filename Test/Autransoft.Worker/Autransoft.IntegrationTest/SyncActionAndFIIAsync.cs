@@ -1,6 +1,6 @@
 ﻿using Autransoft.ApplicationCore.Entities;
 using Autransoft.ApplicationCore.Interfaces;
-using Autransoft.Infrastructure.Data;
+using Autransoft.Infrastructure.Data.Config;
 using Autransoft.IntegrationTest.Configurations;
 using Autransoft.IntegrationTest.Mocks;
 using Autransoft.Template.EntityFramework.Lib.Interfaces;
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace Autransoft.IntegrationTest
 {
     [TestClass]
-    public class SyncActionAndFIIAsync : BaseClassTest<IStatusInvestController, TestAutranSoftEfContext>
+    public class SyncActionAndFIIAsync : BaseClassTest<IStatusInvestController, ActionEntity, EscortConfiguration>
     {
         [TestInitialize]
         public void TestInitialize() => base.Initialize();

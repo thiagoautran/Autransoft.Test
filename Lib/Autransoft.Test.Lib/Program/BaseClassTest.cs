@@ -1,10 +1,7 @@
-using System;
-using Autransoft.Redis.InMemory.Lib.InMemory;
-using Autransoft.Redis.InMemory.Lib.Repositories;
 using Autransoft.SendAsync.Mock.Lib.Servers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis.Extensions.Core.Abstractions;
+using System;
 
 namespace Autransoft.Test.Lib.Program
 {
@@ -17,8 +14,6 @@ namespace Autransoft.Test.Lib.Program
 
         public IServiceProvider ServiceProvider { get; set; }
 
-        public IRedisDatabase RedisDatabase { get; set; }
-
         public IConfiguration Configuration { get; set; }
 
         private string _environment;
@@ -27,15 +22,9 @@ namespace Autransoft.Test.Lib.Program
         { 
             get
             {
-                RedisInMemory.AddToDependencyInjection(ServiceCollection);
-                
                 SendAsyncMethodMock.AddToDependencyInjection(ServiceCollection);
 
                 ServiceProvider = ServiceCollection.BuildServiceProvider();
-
-                var redisDatabase = RedisInMemory.Get(ServiceProvider);
-                if(redisDatabase != null)
-                    ((RedisDatabaseRepository)redisDatabase).SetDatabase(((RedisDatabaseRepository)RedisDatabase).GetDatabase());
 
                 var testClass = ServiceProvider.GetService(typeof(ITestClass));
                 if(testClass != null)
@@ -56,8 +45,6 @@ namespace Autransoft.Test.Lib.Program
             Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{_environment}.json", optional: false, reloadOnChange: false)).Build();
 
             SendAsyncMethodMock = new SendAsyncMethodMock();
-
-            RedisDatabase = new RedisDatabaseRepository();
         }
 
         public BaseClassTest(string environment)
@@ -71,8 +58,6 @@ namespace Autransoft.Test.Lib.Program
             Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{_environment}.json", optional: false, reloadOnChange: false)).Build();
 
             SendAsyncMethodMock = new SendAsyncMethodMock();
-
-            RedisDatabase = new RedisDatabaseRepository();
         }
 
         public void Initialize()
@@ -85,8 +70,6 @@ namespace Autransoft.Test.Lib.Program
         public void Dispose()
         {
             SendAsyncMethodMock.Dispose();
-
-            RedisInMemory.Clean();
         }
     }
 }

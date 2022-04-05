@@ -1,31 +1,25 @@
 using Autransoft.Redis.InMemory.Lib.InMemory;
 using Autransoft.Redis.InMemory.Lib.Repositories;
 using Autransoft.SendAsync.Mock.Lib.Servers;
-using Autransoft.Test.Lib.Data;
-using Autransoft.Test.Lib.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis.Extensions.Core.Abstractions;
 using System;
 
 namespace Autransoft.Test.Lib.Program
 {
-    public class BaseClassTest<ITestClass, IEntityTypeConfiguration> : IDisposable
+    public class BaseClassTest<ITestClass, IRedisDatabase> : IDisposable
         where ITestClass : class
-        where IEntityTypeConfiguration : IEntityTypeConfiguration<ITestClass>
+        where IRedisDatabase : StackExchange.Redis.Extensions.Core.Abstractions.IRedisDatabase
     {
+        public StackExchange.Redis.Extensions.Core.Abstractions.IRedisDatabase RedisDatabase { get; set; }
+
         public SendAsyncMethodMock SendAsyncMethodMock { get; set; }
 
         public IServiceCollection ServiceCollection { get; set; }
 
         public IServiceProvider ServiceProvider { get; set; }
 
-        public IRedisDatabase RedisDatabase { get; set; }
-
         public IConfiguration Configuration { get; set; }
-
-        public IRepository Repository { get; set; }
 
         private string _environment;
 
@@ -57,8 +51,6 @@ namespace Autransoft.Test.Lib.Program
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "IntegrationTest");
             _environment = "IntegrationTest";
 
-            SqlLiteContext.Assembly = typeof(IEntityTypeConfiguration).Assembly;
-
             ServiceCollection = new ServiceCollection();
             Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{_environment}.json", optional: false, reloadOnChange: false)).Build();
 
@@ -73,8 +65,6 @@ namespace Autransoft.Test.Lib.Program
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", environment);
             _environment = environment;
 
-            SqlLiteContext.Assembly = typeof(IEntityTypeConfiguration).Assembly;
-
             ServiceCollection = new ServiceCollection();
             Configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{_environment}.json", optional: false, reloadOnChange: false)).Build();
 
@@ -85,15 +75,9 @@ namespace Autransoft.Test.Lib.Program
 
         public void Initialize()
         {
-            ServiceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite($"Data Source={SqlLiteContext.SQL_LITE_DB_NAME}.db"));
-
-            ServiceCollection.AddScoped(typeof(IRepository), typeof(RepositoryBefore));
-
             AddToDependencyInjection(ServiceCollection, Configuration);
 
             ServiceProvider = ServiceCollection.BuildServiceProvider();
-
-            Repository = ServiceProvider.GetService<IRepository>();
         }
 
         public virtual void AddToDependencyInjection(IServiceCollection serviceCollection, IConfiguration configuration) { }

@@ -1,3 +1,5 @@
+using Autransoft.Redis.InMemory.Lib.InMemory;
+using Autransoft.Redis.InMemory.Lib.Repositories;
 using Autransoft.SendAsync.Mock.Lib.Servers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -9,9 +11,12 @@ using System.Net.Http;
 
 namespace Autransoft.Test.Lib.Program
 {
-    public class BaseApiTest<Startup> : IDisposable
+    public class BaseApiTest<Startup, IRedisDatabase> : IDisposable
         where Startup : class
+        where IRedisDatabase : StackExchange.Redis.Extensions.Core.Abstractions.IRedisDatabase
     {
+        public StackExchange.Redis.Extensions.Core.Abstractions.IRedisDatabase RedisDatabase { get; set; }
+
         public SendAsyncMethodMock SendAsyncMethodMock { get; set; }
 
         public IServiceCollection ServiceCollection { get; set; }
@@ -36,6 +41,10 @@ namespace Autransoft.Test.Lib.Program
                 if (_httpClient == null)
                     _httpClient = Host.GetTestClient();
 
+                var redisDatabase = RedisInMemory.Get(Host.Services);
+                if(redisDatabase != null)
+                    ((RedisDatabaseRepository)redisDatabase).SetDatabase(((RedisDatabaseRepository)RedisDatabase).GetDatabase());
+
                 return _httpClient;
             }
         }
@@ -45,8 +54,13 @@ namespace Autransoft.Test.Lib.Program
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTest");
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "IntegrationTest");
             _environment = "IntegrationTest";
+            
+            ServiceCollection = new ServiceCollection();
+            var configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.IntegrationTest.json", optional: false, reloadOnChange: false)).Build();
 
             SendAsyncMethodMock = new SendAsyncMethodMock();
+
+            RedisDatabase = new RedisDatabaseRepository();
         }
 
         public BaseApiTest(string environment)
@@ -55,11 +69,17 @@ namespace Autransoft.Test.Lib.Program
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", environment);
             _environment = environment;
 
+            ServiceCollection = new ServiceCollection();
+            var configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: false)).Build();
+
             SendAsyncMethodMock = new SendAsyncMethodMock();
+
+            RedisDatabase = new RedisDatabaseRepository();
         }
 
         public void Initialize()
         {
+            ServiceProvider = ServiceCollection.BuildServiceProvider();
         }
 
         private IHost CreateHost()
@@ -76,6 +96,8 @@ namespace Autransoft.Test.Lib.Program
                 })
                 .ConfigureServices((hostBuilderContext, serviceCollection) =>
                 {
+                    RedisInMemory.AddToDependencyInjection(serviceCollection);
+
                     SendAsyncMethodMock.AddToDependencyInjection(serviceCollection);
 
                     AddToDependencyInjection(serviceCollection, hostBuilderContext.Configuration);
@@ -88,7 +110,7 @@ namespace Autransoft.Test.Lib.Program
             task.Wait();
 
             ServiceProvider = task.Result.Services;
-
+            
             return task.Result;
         }
 
@@ -98,18 +120,11 @@ namespace Autransoft.Test.Lib.Program
         {
             SendAsyncMethodMock.Dispose();
 
+            RedisInMemory.Clean();
+
             HttpClientDispose();
 
             HostDispose();
-        }
-
-        private void HttpClientDispose()
-        {
-            if(_httpClient != null)
-            {
-                _httpClient.Dispose();
-                _httpClient = null;
-            }
         }
 
         private void HostDispose()
@@ -120,6 +135,15 @@ namespace Autransoft.Test.Lib.Program
                 task.Wait();
 
                 Host.Dispose();
+            }
+        }
+
+        private void HttpClientDispose()
+        {
+            if(_httpClient != null)
+            {
+                _httpClient.Dispose();
+                _httpClient = null;
             }
         }
     }

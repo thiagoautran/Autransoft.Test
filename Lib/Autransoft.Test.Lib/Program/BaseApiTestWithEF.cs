@@ -1,5 +1,3 @@
-using Autransoft.Redis.InMemory.Lib.InMemory;
-using Autransoft.Redis.InMemory.Lib.Repositories;
 using Autransoft.SendAsync.Mock.Lib.Servers;
 using Autransoft.Test.Lib.Data;
 using Autransoft.Test.Lib.Interfaces;
@@ -9,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using StackExchange.Redis.Extensions.Core.Abstractions;
 using System;
 using System.Net.Http;
 
@@ -27,8 +24,6 @@ namespace Autransoft.Test.Lib.Program
         public IServiceProvider ServiceProvider { get; set; }
 
         public IConfiguration Configuration { get; set; }
-
-        public IRedisDatabase RedisDatabase { get; set; }
 
         public IRepository Repository { get; set; }
 
@@ -48,10 +43,6 @@ namespace Autransoft.Test.Lib.Program
                 if (_httpClient == null)
                     _httpClient = Host.GetTestClient();
 
-                var redisDatabase = RedisInMemory.Get(Host.Services);
-                if(redisDatabase != null)
-                    ((RedisDatabaseRepository)redisDatabase).SetDatabase(((RedisDatabaseRepository)RedisDatabase).GetDatabase());
-
                 return _httpClient;
             }
         }
@@ -68,8 +59,6 @@ namespace Autransoft.Test.Lib.Program
             var configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.IntegrationTest.json", optional: false, reloadOnChange: false)).Build();
 
             SendAsyncMethodMock = new SendAsyncMethodMock();
-
-            RedisDatabase = new RedisDatabaseRepository();
         }
 
         public BaseApiTest(string environment)
@@ -84,8 +73,6 @@ namespace Autransoft.Test.Lib.Program
             var configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: false)).Build();
 
             SendAsyncMethodMock = new SendAsyncMethodMock();
-
-            RedisDatabase = new RedisDatabaseRepository();
         }
 
         public void Initialize()
@@ -113,8 +100,6 @@ namespace Autransoft.Test.Lib.Program
                 })
                 .ConfigureServices((hostBuilderContext, serviceCollection) =>
                 {
-                    RedisInMemory.AddToDependencyInjection(serviceCollection);
-
                     SendAsyncMethodMock.AddToDependencyInjection(serviceCollection);
 
                     serviceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite($"Data Source={SqlLiteContext.SQL_LITE_DB_NAME}.db"));
@@ -142,8 +127,6 @@ namespace Autransoft.Test.Lib.Program
         public void Dispose()
         {
             SendAsyncMethodMock.Dispose();
-
-            RedisInMemory.Clean();
 
             HttpClientDispose();
 

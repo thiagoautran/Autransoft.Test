@@ -12,9 +12,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autransoft.Fluent.HttpClient" Version="1.0.19" />
+    <PackageReference Include="Autransoft.Fluent.HttpClient" Version="1.0.20" />
     <PackageReference Include="Autransoft.Redis.InMemory" Version="1.0.6" />
-    <PackageReference Include="Autransoft.SendAsync.Mock" Version="1.0.9" />
+    <PackageReference Include="Autransoft.SendAsync.Mock" Version="1.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.23" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.15" />
@@ -25,13 +25,6 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Autransoft.Fluent.HttpClient\Autransoft.Fluent.HttpClient.Lib\Autransoft.Fluent.HttpClient.Lib.csproj" />
-    <ProjectReference Include="..\..\..\Autransoft.SendAsync.Mock\Autransoft.SendAsync.Mock.Lib\Autransoft.SendAsync.Mock.Lib.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ using Autransoft.Infrastructure.Data.Config;
 using Autransoft.IntegrationTest.Configurations;
 using Autransoft.IntegrationTest.Mocks;
 using Autransoft.Template.EntityFramework.Lib.Interfaces;
+using Autransoft.Test.Lib.Extensions;
 using Autransoft.Test.Lib.Program;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +22,7 @@ using System.Threading.Tasks;
 namespace Autransoft.IntegrationTest
 {
     [TestClass]
-    public class ListFIIAsync : BaseApiTest<Startup<DependencyInjectionConfigTest>, ActionEntity, EscortConfiguration>
+    public class ListFIIAsync : BaseApiTest<Startup<DependencyInjectionConfigTest>, ActionEntity, ActionConfiguration>
     {
         [TestInitialize]
         public void TestInitialize() => base.Initialize();
@@ -30,7 +31,7 @@ namespace Autransoft.IntegrationTest
         public void TestCleanup() => base.Dispose();
 
         public override void AddToDependencyInjection(IServiceCollection serviceCollection, IConfiguration configuration) =>
-            serviceCollection.AddSingleton<IAutranSoftEfContext, SqlLiteContextTest>();
+            serviceCollection.ReplaceTransient<IAutranSoftEfContext, SqlLiteContextTest>();
 
         [TestMethod]
         public async Task HappyDay()

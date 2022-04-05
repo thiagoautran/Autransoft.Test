@@ -1,5 +1,4 @@
 using Autransoft.Test.Lib.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Autransoft.Test.Lib.Data
 {

@@ -119,7 +119,7 @@ namespace Autransoft.Test.Lib.Program
 
                     serviceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite($"Data Source={SqlLiteContext.SQL_LITE_DB_NAME}.db"));
 
-                    ServiceCollection.AddScoped(typeof(IRepository), typeof(RepositoryAfter));
+                    serviceCollection.AddScoped(typeof(IRepository), typeof(RepositoryAfter));
 
                     AddToDependencyInjection(serviceCollection, hostBuilderContext.Configuration);
 

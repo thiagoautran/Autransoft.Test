@@ -5,6 +5,7 @@ using Autransoft.Infrastructure.Data.Config;
 using Autransoft.IntegrationTest.Configurations;
 using Autransoft.IntegrationTest.Mocks;
 using Autransoft.Template.EntityFramework.Lib.Interfaces;
+using Autransoft.Test.Lib.Extensions;
 using Autransoft.Test.Lib.Program;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +22,7 @@ using System.Threading.Tasks;
 namespace Autransoft.IntegrationTest
 {
     [TestClass]
-    public class ListActionAsync : BaseApiTest<Startup<DependencyInjectionConfigTest>, ActionEntity, EscortConfiguration>
+    public class ListActionAsync : BaseApiTest<Startup<DependencyInjectionConfigTest>, ActionEntity, ActionConfiguration>
     {
         [TestInitialize]
         public void TestInitialize() => base.Initialize();
@@ -60,7 +61,7 @@ namespace Autransoft.IntegrationTest
                 });
             }
 
-            await Repository.DbContext.SaveChangesAsync();
+            Repository.DbContext.SaveChanges();
 
             var response = await HttpClient.Fluent().GetAsync("api/v1/statusinvest/action");
             var data = await response.DeserializeAsync<IEnumerable<ActionEntity>>();

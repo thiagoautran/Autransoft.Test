@@ -56,7 +56,7 @@ namespace Autransoft.Test.Lib.Program
             SqlLiteContext.Assembly = typeof(IEntityTypeConfiguration).Assembly;
             
             ServiceCollection = new ServiceCollection();
-            var configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.IntegrationTest.json", optional: false, reloadOnChange: false)).Build();
+            (new ConfigurationBuilder().AddJsonFile($"appsettings.IntegrationTest.json", optional: false, reloadOnChange: false)).Build();
 
             SendAsyncMethodMock = new SendAsyncMethodMock();
         }
@@ -70,7 +70,7 @@ namespace Autransoft.Test.Lib.Program
             SqlLiteContext.Assembly = typeof(IEntityTypeConfiguration).Assembly;
 
             ServiceCollection = new ServiceCollection();
-            var configuration = (new ConfigurationBuilder().AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: false)).Build();
+            (new ConfigurationBuilder().AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: false)).Build();
 
             SendAsyncMethodMock = new SendAsyncMethodMock();
         }
@@ -104,7 +104,7 @@ namespace Autransoft.Test.Lib.Program
 
                     serviceCollection.AddDbContext<SqlLiteContext>(options => options.UseSqlite($"Data Source={SqlLiteContext.SQL_LITE_DB_NAME}.db"));
 
-                    ServiceCollection.AddScoped(typeof(IRepository), typeof(RepositoryAfter));
+                    serviceCollection.AddScoped(typeof(IRepository), typeof(RepositoryAfter));
 
                     AddToDependencyInjection(serviceCollection, hostBuilderContext.Configuration);
 

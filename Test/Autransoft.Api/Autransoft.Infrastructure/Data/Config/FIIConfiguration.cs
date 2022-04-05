@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Autransoft.Infrastructure.Data.Config
 {
-    public class PhotoConfiguration : IEntityTypeConfiguration<FIIEntity>
+    public class FIIConfiguration : IEntityTypeConfiguration<FIIEntity>
     {
         public void Configure(EntityTypeBuilder<FIIEntity> builder)
         {

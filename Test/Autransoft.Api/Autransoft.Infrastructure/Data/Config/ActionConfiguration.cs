@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Autransoft.Infrastructure.Data.Config
 {
-    public class EscortConfiguration : IEntityTypeConfiguration<ActionEntity>
+    public class ActionConfiguration : IEntityTypeConfiguration<ActionEntity>
     {
         public void Configure(EntityTypeBuilder<ActionEntity> builder)
         {

@@ -11,10 +11,9 @@ using System;
 
 namespace Autransoft.Test.Lib.Program
 {
-    public class BaseClassTest<ITestClass, Entity, IEntityTypeConfiguration> : IDisposable
+    public class BaseClassTest<ITestClass, IEntityTypeConfiguration> : IDisposable
         where ITestClass : class
-        where Entity : class
-        where IEntityTypeConfiguration : IEntityTypeConfiguration<Entity>
+        where IEntityTypeConfiguration : IEntityTypeConfiguration<ITestClass>
     {
         public SendAsyncMethodMock SendAsyncMethodMock { get; set; }
 

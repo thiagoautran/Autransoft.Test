@@ -1,0 +1,5 @@
+{
+    "dotnet-test-explorer.testProjectPaths": ["**/*.Test.csproj", "**/*.UnitTest.csproj", "**/*.IntegrationTest"],
+    "dotnet-test-explorer.enableTelemetry": false,
+    "dotnet-test-explorer.autoWatch": true
+}

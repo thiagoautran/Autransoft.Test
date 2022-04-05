@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug 6.0",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/TAN.Core.5.0.Skokka.Api/bin/Debug/net6.0/TAN.Core.5.0.Skokka.Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/TAN.Core.5.0.Skokka.Api",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "Run All Tests",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "test",
+            "program": "${workspaceFolder}/TAN.Core.5.0.Skokka.Test/bin/Debug/net6.0/TAN.Core.5.0.Skokka.Test.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/TAN.Core.5.0.Skokka.Test",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Test"
+            }
+        }
+    ]
+}

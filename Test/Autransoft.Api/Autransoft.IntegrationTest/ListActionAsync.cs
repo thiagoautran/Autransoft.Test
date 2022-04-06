@@ -31,7 +31,7 @@ namespace Autransoft.IntegrationTest
         public void TestCleanup() => base.Dispose();
 
         public override void AddToDependencyInjection(IServiceCollection serviceCollection, IConfiguration configuration) =>
-            serviceCollection.AddSingleton<IAutranSoftEfContext, SqlLiteContextTest>();
+            serviceCollection.ReplaceTransient<IAutranSoftEfContext, SqlLiteContextTest>();
 
         [TestMethod]
         public async Task HappyDay()
@@ -40,15 +40,19 @@ namespace Autransoft.IntegrationTest
             var actionsStr = Encoding.ASCII.GetString(actionsBytes);
             var advancedSearchResults = JsonSerializer.Deserialize<IEnumerable<AdvancedSearchResultDto>>(actionsStr);
 
-            var actionRepository = Repository.DbContext.Set<ActionEntity>();
+            var dbContext = Repository.DbContext;
+            var actionRepository = dbContext.Set<ActionEntity>();
 
             foreach (var advancedSearchResult in advancedSearchResults)
             {
+                if (advancedSearchResult == null || advancedSearchResult.CompanyId <= 0)
+                    continue;
+
                 var action = await actionRepository
                     .Where(action => action.CompanyId == advancedSearchResult.CompanyId)
                     .FirstOrDefaultAsync();
 
-                if (action == null || action.CompanyId <= 0)
+                if (action != null)
                     continue;
 
                 await actionRepository.AddAsync(new ActionEntity
@@ -59,9 +63,11 @@ namespace Autransoft.IntegrationTest
                     Ticker = advancedSearchResult.Ticker,
                     LastUpdate = DateTime.UtcNow
                 });
+
+                await dbContext.SaveChangesAsync();
             }
 
-            Repository.DbContext.SaveChanges();
+            var actions = await actionRepository.ToListAsync();
 
             var response = await HttpClient.Fluent().GetAsync("api/v1/statusinvest/action");
             var data = await response.DeserializeAsync<IEnumerable<ActionEntity>>();

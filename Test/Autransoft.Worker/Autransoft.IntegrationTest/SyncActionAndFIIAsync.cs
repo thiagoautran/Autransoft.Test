@@ -4,6 +4,7 @@ using Autransoft.Infrastructure.Data.Config;
 using Autransoft.IntegrationTest.Configurations;
 using Autransoft.IntegrationTest.Mocks;
 using Autransoft.Template.EntityFramework.Lib.Interfaces;
+using Autransoft.Test.Lib.Extensions;
 using Autransoft.Test.Lib.Program;
 using Autransoft.Worker;
 using Microsoft.Extensions.Configuration;
@@ -30,7 +31,7 @@ namespace Autransoft.IntegrationTest
 
             new StatusInvestMock().AddToDependencyInjection(serviceCollection);
 
-            serviceCollection.AddSingleton<IAutranSoftEfContext, SqlLiteContextTest>();
+            serviceCollection.ReplaceSingleton<IAutranSoftEfContext, SqlLiteContextTest>();
         }
 
         [TestMethod]

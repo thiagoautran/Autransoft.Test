@@ -63,6 +63,8 @@ namespace Autransoft.IntegrationTest
 
             await Repository.DbContext.SaveChangesAsync();
 
+            var fiis = await fiiRepository.ToListAsync();
+
             var response =  await HttpClient.Fluent().GetAsync("api/v1/statusinvest/fii");
             var data = await response.DeserializeAsync<IEnumerable<FIIEntity>>();
 

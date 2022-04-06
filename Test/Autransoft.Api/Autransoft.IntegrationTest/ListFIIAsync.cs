@@ -44,11 +44,14 @@ namespace Autransoft.IntegrationTest
 
             foreach (var advancedSearchResult in advancedSearchResults)
             {
+                if (advancedSearchResult == null || advancedSearchResult.CompanyId <= 0)
+                    continue;
+
                 var fii = await fiiRepository
                     .Where(action => action.CompanyId == advancedSearchResult.CompanyId)
                     .FirstOrDefaultAsync();
 
-                if (fii == null || fii.CompanyId <= 0)
+                if (fii != null)
                     continue;
 
                 await fiiRepository.AddAsync(new FIIEntity
@@ -59,9 +62,9 @@ namespace Autransoft.IntegrationTest
                     Ticker = advancedSearchResult.Ticker,
                     LastUpdate = DateTime.UtcNow
                 });
-            }
 
-            await Repository.DbContext.SaveChangesAsync();
+                await Repository.DbContext.SaveChangesAsync();
+            }
 
             var fiis = await fiiRepository.ToListAsync();
 

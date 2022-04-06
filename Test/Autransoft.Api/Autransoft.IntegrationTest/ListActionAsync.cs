@@ -40,8 +40,7 @@ namespace Autransoft.IntegrationTest
             var actionsStr = Encoding.ASCII.GetString(actionsBytes);
             var advancedSearchResults = JsonSerializer.Deserialize<IEnumerable<AdvancedSearchResultDto>>(actionsStr);
 
-            var dbContext = Repository.DbContext;
-            var actionRepository = dbContext.Set<ActionEntity>();
+            var actionRepository = Repository.DbContext.Set<ActionEntity>();
 
             foreach (var advancedSearchResult in advancedSearchResults)
             {
@@ -64,7 +63,7 @@ namespace Autransoft.IntegrationTest
                     LastUpdate = DateTime.UtcNow
                 });
 
-                await dbContext.SaveChangesAsync();
+                await Repository.DbContext.SaveChangesAsync();
             }
 
             var actions = await actionRepository.ToListAsync();

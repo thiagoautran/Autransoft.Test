@@ -104,6 +104,24 @@ namespace Autransoft.Test.Lib.Program
             SendAsyncMethodMock.Dispose();
 
             RedisInMemory.Clean();
+
+            SqlLiteDispose();
+        }
+
+        private void SqlLiteDispose()
+        {
+            try
+            {
+                if (Repository != null && Repository.DbContext != null && Repository.DbContext.Database != null)
+                {
+                    var task = Repository.DbContext.Database.EnsureDeletedAsync();
+                    task.Wait();
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Ocorreu um erro ao tentar deletar o banco de dados do SqlLite.");
+            }
         }
     }
 }

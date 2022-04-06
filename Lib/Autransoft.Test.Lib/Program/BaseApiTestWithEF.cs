@@ -148,10 +148,17 @@ namespace Autransoft.Test.Lib.Program
 
         private void SqlLiteDispose()
         {
-            if(Repository != null && Repository.DbContext != null && Repository.DbContext.Database != null)
+            try
             {
-                var task = Repository.DbContext.Database.EnsureDeletedAsync();
-                task.Wait();
+                if (Repository != null && Repository.DbContext != null && Repository.DbContext.Database != null)
+                {
+                    var task = Repository.DbContext.Database.EnsureDeletedAsync();
+                    task.Wait();
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Ocorreu um erro ao tentar deletar o banco de dados do SqlLite.");
             }
         }
 
